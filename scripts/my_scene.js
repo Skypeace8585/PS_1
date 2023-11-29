@@ -13,16 +13,19 @@ class MyScene extends Phaser.Scene {
          // 画像の読み込み(使用する時の名前, パス)
         this.load.image('back', 'assets/background.png');
         this.load.image('taro', 'assets/taro.png');
+        this.load.image('jiro', 'assets/jiro.png');
     }
 
     // シーン初期化処理
     create() {
          // 単体画像をシーンに追加(X座標,Y座標,画像名)
         this.add.image(D_WIDTH/2, D_HEIGHT/2, 'back');
-        this.taro = this.physics.add.image(D_WIDTH/2, D_HEIGHT/2, 'taro');
+        // this.taro = this.physics.add.image(D_WIDTH/2, D_HEIGHT/2, 'taro');
+        this.taro = this.add.image(D_WIDTH/2, D_HEIGHT/2, 'taro');
+        this.jiro = this.add.image(D_WIDTH/4, D_HEIGHT/4, 'jiro');
         this.text = this.add.text(10, 10, 'Scene 1').setFontSize(32).setColor('#ff0');
         // this.player_direction = 1;
-        this.taro.angle = 0;
+        // this.taro.angle = 0;
     }
     
   // 毎フレーム実行される繰り返し処理
@@ -38,9 +41,17 @@ class MyScene extends Phaser.Scene {
         //     this.taro.x -= 10;
         //     this.taro.y -= 10;
         // }
-        this.taro.angle += 1;
-        this.taro.setAngle(this.taro.angle); 
-        this.taro.setVelocityX(100);
-        this.taro.setVelocityY(100);       
+        // this.taro.angle += 1;
+        // this.taro.setAngle(this.taro.angle); 
+        // this.taro.setVelocityX(100);
+        // this.taro.setVelocityY(100);
+        let cursors = this.input.keyboard.createCursorKeys();
+        if (cursors.left.isDown) {
+            this.taro.x -= 50;
+            this.jiro.x += 50;
+        } else if (cursors.right.isDown) {
+            this.taro.x += 50;
+            this.jiro.x -= 50;
+        }
     }
 }
