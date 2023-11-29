@@ -19,23 +19,28 @@ class MyScene extends Phaser.Scene {
     create() {
          // 単体画像をシーンに追加(X座標,Y座標,画像名)
         this.add.image(D_WIDTH/2, D_HEIGHT/2, 'back');
-        this.taro = this.add.image(D_WIDTH/2, D_HEIGHT/2, 'taro');
+        this.taro = this.physics.add.image(D_WIDTH/2, D_HEIGHT/2, 'taro');
         this.text = this.add.text(10, 10, 'Scene 1').setFontSize(32).setColor('#ff0');
-        this.player_direction = 1;
+        // this.player_direction = 1;
+        this.taro.angle = 0;
     }
     
   // 毎フレーム実行される繰り返し処理
     update() {
-        if(this.taro.y >= D_HEIGHT - 100) this.player_direction = -1
-        if (this.taro.y <= 100) this.player_direction = 1;
-        if(this.taro.x >= D_WIDTH - 100) this.player_direction = -1;
-        if (this.taro.x <= 100) this.player_direction = 1;
-        if (this.player_direction == 1) {
-            this.taro.x += 10;
-            this.taro.y += 10;
-        } else {
-            this.taro.x -= 10;
-            this.taro.y -= 10;
-        }
+        // if(this.taro.y >= D_HEIGHT - 100) this.player_direction = -1
+        // if (this.taro.y <= 100) this.player_direction = 1;
+        // if(this.taro.x >= D_WIDTH - 100) this.player_direction = -1;
+        // if (this.taro.x <= 100) this.player_direction = 1;
+        // if (this.player_direction == 1) {
+        //     this.taro.x += 10;
+        //     this.taro.y += 10;
+        // } else {
+        //     this.taro.x -= 10;
+        //     this.taro.y -= 10;
+        // }
+        this.taro.angle += 1;
+        this.taro.setAngle(this.taro.angle); 
+        this.taro.setVelocityX(100);
+        this.taro.setVelocityY(100);       
     }
 }
