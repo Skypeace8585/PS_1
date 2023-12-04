@@ -3,6 +3,7 @@
 // 他のJSファイルから呼び出された場合はシーンを返す
 class MyScene extends Phaser.Scene {
     hanakoFlag = false;
+    hanakoDel = false;
     // 継承した「Phaser.Scene」クラスのコンストラクタの呼び出し
     constructor() {
         super({ key: 'MyScene', active: true });
@@ -94,21 +95,26 @@ class MyScene extends Phaser.Scene {
             this.leftTime --;
         }
         if(this.leftTime <= 0){
-            if(this.hanakoFlag){
-                 this.hanako.destroy();
-             }
-             let randx = Phaser.Math.Between(200, 400);
-             let randy = Phaser.Math.Between(100, 200);
-             // this.hanako = this.physics.add.image(randx, randy, 'hanako');
-             let hanakoGroup = this.physics.add.group();
-             this.hanako = hanakoGroup.create(randx, randy, 'hanako');
-             this.hanakoFlag = true;
-             this.leftTime = 3;
+            if(this.hanakoDel){
+                this.hanako.destroy();
+            } else {
+                if(this.hanakoFlag){
+                    this.hanako.destroy();
+                }
+                let randx = Phaser.Math.Between(200, 400);
+                let randy = Phaser.Math.Between(100, 200);
+                // this.hanako = this.physics.add.image(randx, randy, 'hanako');
+                let hanakoGroup = this.physics.add.group();
+                this.hanako = hanakoGroup.create(randx, randy, 'hanako');
+                this.hanakoFlag = true;
+                this.leftTime = 3;
+            }
         }
         // 当たり判定
         this.physics.add.overlap(this.taro, this.hanako, collision_detection, null, this);
         function collision_detection() {
-         this.add.text(100, 150, '痛い！',);
+            this.hanakoDel = true;
+            this.add.text(100, 150, '痛い！',);
         }
     }
 }
