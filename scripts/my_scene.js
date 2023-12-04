@@ -2,7 +2,7 @@
 // MyScene1クラス
 // 他のJSファイルから呼び出された場合はシーンを返す
 class MyScene extends Phaser.Scene {
-
+    hanakoFlag = false;
     // 継承した「Phaser.Scene」クラスのコンストラクタの呼び出し
     constructor() {
         super({ key: 'MyScene', active: true });
@@ -22,7 +22,7 @@ class MyScene extends Phaser.Scene {
          // 単体画像をシーンに追加(X座標,Y座標,画像名)
         this.add.image(D_WIDTH/2, D_HEIGHT/2, 'back');
         // this.taro = this.physics.add.image(D_WIDTH/2, D_HEIGHT/2, 'taro');
-        this.taro = this.add.image(D_WIDTH/2, D_HEIGHT/2, 'taro');
+        this.taro = this.physics.add.image(D_WIDTH/2, D_HEIGHT/2, 'taro');
         this.jiro = this.add.image(D_WIDTH/4, D_HEIGHT/4, 'jiro');
         this.text = this.add.text(600, 400, 'My world').setFontSize(40).setColor('#ff0');
         // this.player_direction = 1;
@@ -34,10 +34,12 @@ class MyScene extends Phaser.Scene {
         this.helloText = this.add.text(100, 50, '');
         this.heyText = this.add.text(100, 50, '');
         this.keys.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        this.timeCounter = 0;
+        this.leftTime = 3;
     }
     
   // 毎フレーム実行される繰り返し処理
-    update() {
+    update(time, delta) {
         // if(this.taro.y >= D_HEIGHT - 100) this.player_direction = -1
         // if (this.taro.y <= 100) this.player_direction = 1;
         // if(this.taro.x >= D_WIDTH - 100) this.player_direction = -1;
@@ -53,13 +55,26 @@ class MyScene extends Phaser.Scene {
         // this.taro.setAngle(this.taro.angle); 
         // this.taro.setVelocityX(100);
         // this.taro.setVelocityY(100);
+        // if (cursors.left.isDown) {
+            //     this.taro.x -= 50;
+            //     this.jiro.x += 50;
+            // } else if (cursors.right.isDown) {
+                //     this.taro.x += 50;
+                //     this.jiro.x -= 50;
+                // }
         let cursors = this.input.keyboard.createCursorKeys();
         if (cursors.left.isDown) {
-            this.taro.x -= 50;
-            this.jiro.x += 50;
-        } else if (cursors.right.isDown) {
-            this.taro.x += 50;
-            this.jiro.x -= 50;
+            this.taro.setVelocityX(-200);
+        }else if (cursors.right.isDown) {
+            console.log('right');
+            this.taro.setVelocityX(200);
+        }else if (cursors.up.isDown) {
+            this.taro.setVelocityY(-200);
+        }else if (cursors.down.isDown) {
+            this.taro.setVelocityY(200);
+        } else {
+            this.taro.setVelocityX(0);
+            this.taro.setVelocityY(0);
         }
         if(this.keys.keyA.isDown){
             this.helloText.setText('Hello!');
@@ -72,6 +87,28 @@ class MyScene extends Phaser.Scene {
         if(this.keys.keyW.isDown){
             let randx = Phaser.Math.Between(100, 400);
              this.hanako = this.add.image(randx, 100, 'hanako');
+        }
+        this.timeCounter += delta;
+        if(this.timeCounter > 1000) {
+            this.timeCounter = 0;
+            this.leftTime --;
+        }
+        if(this.leftTime <= 0){
+            if(this.hanakoFlag){
+                 this.hanako.destroy();
+             }
+             let randx = Phaser.Math.Between(200, 400);
+             let randy = Phaser.Math.Between(100, 200);
+             // this.hanako = this.physics.add.image(randx, randy, 'hanako');
+             let hanakoGroup = this.physics.add.group();
+             this.hanako = hanakoGroup.create(randx, randy, 'hanako');
+             this.hanakoFlag = true;
+             this.leftTime = 3;
+        }
+        // 当たり判定
+        this.physics.add.overlap(this.taro, this.hanako, collision_detection, null, this);
+        function collision_detection() {
+         this.add.text(100, 150, '痛い！',);
         }
     }
 }
